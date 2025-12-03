@@ -1,0 +1,74 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "backend/**"
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: meal
+          POSTGRES_PASSWORD: meal
+          POSTGRES_DB: meal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U meal -d meal_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest ruff mypy
+
+      - name: Ruff lint
+        run: |
+          source .venv/bin/activate
+          ruff check app
+
+      - name: Mypy
+        run: |
+          source .venv/bin/activate
+          mypy app
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgresql+psycopg://meal:meal@localhost:5432/meal_test
+        run: |
+          source .venv/bin/activate
+          alembic upgrade head
+
+      - name: Pytest
+        env:
+          DATABASE_URL: postgresql+psycopg://meal:meal@localhost:5432/meal_test
+        run: |
+          source .venv/bin/activate
+          pytest -q

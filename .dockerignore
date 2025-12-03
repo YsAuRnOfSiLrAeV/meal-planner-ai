@@ -1,0 +1,8 @@
+# Ignore everything by default
+**
+
+# Allow only the built jar and Dockerfile
+!backend/build/libs/mealplanner-backend-0.0.1-SNAPSHOT.jar
+!Dockerfile
+
+
