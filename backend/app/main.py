@@ -8,17 +8,25 @@ from app.api.v1.users import router as users_router
 
 app = FastAPI(title="AI Meal Planner (Python)")
 
-_origins = set()
+_origins = {
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://meal-planner-ai-front.vercel.app",
+}
 if settings.FRONTEND_ORIGIN:
-	_origins.add(str(settings.FRONTEND_ORIGIN))
-_origins.update({"http://localhost:3000", "http://127.0.0.1:3000"})
+    _origins.add(str(settings.FRONTEND_ORIGIN))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(_origins),
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "X-OpenRouter-API-Key"],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "X-OpenRouter-API-Key",
+        "Accept",
+    ],
 )
 
 
