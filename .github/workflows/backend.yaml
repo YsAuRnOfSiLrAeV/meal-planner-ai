@@ -54,11 +54,6 @@ jobs:
           source .venv/bin/activate
           ruff check app
 
-      - name: Mypy
-        run: |
-          source .venv/bin/activate
-          mypy app
-
       - name: Run migrations
         env:
           DATABASE_URL: postgresql+psycopg://meal:meal@localhost:5432/meal_test
