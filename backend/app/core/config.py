@@ -6,10 +6,6 @@ from typing import Optional
 class Settings(BaseSettings):
 	FRONTEND_ORIGIN: Optional[AnyHttpUrl] = None
 
-	# OIDC
-	OIDC_ISSUER: Optional[str] = None
-	OIDC_AUDIENCE: Optional[str] = None
-
 	# LLM
 	OPENROUTER_API_KEY: Optional[str] = None
 	OPENAI_API_KEY: Optional[str] = None
