@@ -185,7 +185,7 @@ function Generate() {
           const amount = isCountable
             ? `${ing.quantity ?? ""} pcs`
             : `${(ing as any).mass_g ?? ""} g`;
-          addLine(`- ${ing.name} — ${amount}`, 24);
+          addLine(`- ${ing.name} - ${amount}`, 24);
         }
         y += 4;
       }
